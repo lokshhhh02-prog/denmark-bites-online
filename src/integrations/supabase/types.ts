@@ -14,6 +14,36 @@ export type Database = {
   }
   public: {
     Tables: {
+      bank_accounts: {
+        Row: {
+          account_name: string
+          account_number: string
+          bank_name: string
+          branch_label: string | null
+          created_at: string
+          id: string
+          ifsc: string
+        }
+        Insert: {
+          account_name: string
+          account_number: string
+          bank_name: string
+          branch_label?: string | null
+          created_at?: string
+          id?: string
+          ifsc: string
+        }
+        Update: {
+          account_name?: string
+          account_number?: string
+          bank_name?: string
+          branch_label?: string | null
+          created_at?: string
+          id?: string
+          ifsc?: string
+        }
+        Relationships: []
+      }
       branches: {
         Row: {
           address: string
@@ -107,7 +137,11 @@ export type Database = {
           order_number: number
           order_type: Database["public"]["Enums"]["order_type"]
           packing_charge: number
+          payment_method: string
+          payment_status: string
           phone: string
+          razorpay_order_id: string | null
+          razorpay_payment_id: string | null
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
           table_number: string | null
@@ -126,7 +160,11 @@ export type Database = {
           order_number?: never
           order_type: Database["public"]["Enums"]["order_type"]
           packing_charge?: number
+          payment_method?: string
+          payment_status?: string
           phone: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal: number
           table_number?: string | null
@@ -145,7 +183,11 @@ export type Database = {
           order_number?: never
           order_type?: Database["public"]["Enums"]["order_type"]
           packing_charge?: number
+          payment_method?: string
+          payment_status?: string
           phone?: string
+          razorpay_order_id?: string | null
+          razorpay_payment_id?: string | null
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           table_number?: string | null
@@ -251,17 +293,30 @@ export type Database = {
           user_id: string
         }[]
       }
-      place_order: {
-        Args: {
-          _branch: number
-          _items: Json
-          _name: string
-          _phone: string
-          _table: string
-          _type: Database["public"]["Enums"]["order_type"]
-        }
-        Returns: Json
-      }
+      place_order:
+        | {
+            Args: {
+              _branch: number
+              _items: Json
+              _name: string
+              _phone: string
+              _table: string
+              _type: Database["public"]["Enums"]["order_type"]
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _branch: number
+              _items: Json
+              _name: string
+              _payment?: string
+              _phone: string
+              _table: string
+              _type: Database["public"]["Enums"]["order_type"]
+            }
+            Returns: Json
+          }
       remove_manager: {
         Args: { _branch: number; _user_id: string }
         Returns: undefined
