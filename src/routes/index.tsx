@@ -67,7 +67,7 @@ function Index() {
           </div>
         ))}
         <div key={i} className="relative z-10 mx-auto flex h-full max-w-7xl flex-col justify-center px-5 text-ink-foreground">
-          <p className="animate-rise text-xs font-semibold uppercase tracking-[0.35em] text-gold">{slides[i].eyebrow}</p>
+          <p className="animate-rise text-xs font-semibold uppercase tracking-[0.35em] text-gold">{slides[i]!.eyebrow}</p>
           <h1
             className={cn(
               "animate-rise mt-5 max-w-4xl font-display font-semibold leading-[0.95]",
@@ -75,10 +75,10 @@ function Index() {
             )}
             style={{ animationDelay: "120ms" }}
           >
-            {i === 0 ? <span className="text-gold-grad">{slides[i].title}</span> : slides[i].title}
+            {i === 0 ? <span className="text-gold-grad">{slides[i]!.title}</span> : slides[i]!.title}
           </h1>
           <p className="animate-rise mt-6 max-w-xl text-lg text-ink-foreground/85" style={{ animationDelay: "240ms" }}>
-            {slides[i].text}
+            {slides[i]!.text}
           </p>
           <div className="animate-rise mt-9 flex flex-wrap gap-3" style={{ animationDelay: "360ms" }}>
             <Button asChild variant="hero" size="lg" className="h-12 px-8">

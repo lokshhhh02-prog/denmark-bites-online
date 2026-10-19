@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/menu")({
   validateSearch: (s: Record<string, unknown>) => {
-    const b = Number(s.branch);
+    const b = Number(s['branch']);
     return { branch: b === 2 || b === 3 ? b : 1 };
   },
   head: () => ({
@@ -238,9 +238,9 @@ function CheckoutDialog({ open, onOpenChange, branch, lines, subtotal, onPlaced 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!type) return;
-    if (name.trim().length < 2) return toast.error("Please enter your name");
-    if (!/^[0-9+ ]{10,15}$/.test(phone.trim())) return toast.error("Please enter a valid phone number");
-    if (type === "dine_in" && !table.trim()) return toast.error("Please enter your table number");
+    if (name.trim().length < 2) { toast.error("Please enter your name"); return; }
+    if (!/^[0-9+ ]{10,15}$/.test(phone.trim())) { toast.error("Please enter a valid phone number"); return; }
+    if (type === "dine_in" && !table.trim()) { toast.error("Please enter your table number"); return; }
     setBusy(true);
     const { data, error } = await supabase.rpc("place_order", {
       _branch: branch.id, _type: type, _name: name, _phone: phone,
@@ -248,7 +248,7 @@ function CheckoutDialog({ open, onOpenChange, branch, lines, subtotal, onPlaced 
       _items: lines.map((l) => ({ id: l.id, qty: l.qty })),
     });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     const res = data as { id: string; token: string; order_number: number };
     cart.clear();
     onOpenChange(false);

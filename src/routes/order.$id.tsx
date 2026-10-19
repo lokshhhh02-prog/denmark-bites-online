@@ -10,7 +10,7 @@ import { inr } from "@/lib/cart";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/order/$id")({
-  validateSearch: (s: Record<string, unknown>) => ({ token: typeof s.token === "string" ? s.token : "" }),
+  validateSearch: (s: Record<string, unknown>) => ({ token: typeof s['token'] === "string" ? s['token'] : "" }),
   head: () => ({
     meta: [
       { title: "Your Order — Denmark Restaurant" },
