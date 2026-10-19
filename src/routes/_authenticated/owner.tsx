@@ -287,12 +287,12 @@ function MenuEditor({ branchId }: { branchId: number }) {
   async function add(e: React.FormEvent) {
     e.preventDefault();
     const price = Number(draft.price);
-    if (!draft.name.trim() || !draft.category.trim() || !(price >= 0) || draft.price === "") return toast.error("Fill in name, category and price");
+    if (!draft.name.trim() || !draft.category.trim() || !(price >= 0) || draft.price === "") { toast.error("Fill in name, category and price"); return; }
     const { error } = await supabase.from("menu_items").insert({
       branch_id: branchId, name: draft.name.trim(), category: draft.category.trim(), cuisine: draft.cuisine, price,
       sort: (items?.length ?? 0) + 1,
     });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Dish added");
     setDraft({ name: "", category: draft.category, cuisine: draft.cuisine, price: "" });
     qc.invalidateQueries({ queryKey: key });
@@ -332,21 +332,21 @@ function MenuRow({ item, onChanged }: { item: Item; onChanged: () => void }) {
 
   async function save() {
     const p = Number(price);
-    if (!name.trim() || !(p >= 0)) return toast.error("Invalid name or price");
+    if (!name.trim() || !(p >= 0)) { toast.error("Invalid name or price"); return; }
     const { error } = await supabase.from("menu_items").update({ name: name.trim(), price: p, category: category.trim() }).eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Saved");
     onChanged();
   }
   async function toggleStock(v: boolean) {
     const { error } = await supabase.from("menu_items").update({ in_stock: v }).eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onChanged();
   }
   async function del() {
     if (!confirm(`Delete ${item.name}?`)) return;
     const { error } = await supabase.from("menu_items").delete().eq("id", item.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     onChanged();
   }
   return (
@@ -375,10 +375,10 @@ function SettingsPanel({ branch }: { branch: Branch }) {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     const gst = Number(f.gst), pack = Number(f.pack);
-    if (!(gst >= 0 && gst <= 28)) return toast.error("GST must be between 0 and 28%");
-    if (!(pack >= 0)) return toast.error("Packing charge must be 0 or more");
+    if (!(gst >= 0 && gst <= 28)) { toast.error("GST must be between 0 and 28%"); return; }
+    if (!(pack >= 0)) { toast.error("Packing charge must be 0 or more"); return; }
     const { error } = await supabase.from("branches").update({ name: f.name, address: f.address, phone: f.phone, gst_percent: gst, packing_charge: pack, is_open: f.open }).eq("id", branch.id);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Branch settings saved");
     qc.invalidateQueries({ queryKey: ["branch", branch.id] });
     qc.invalidateQueries({ queryKey: ["branches"] });
@@ -421,7 +421,7 @@ function StaffPanel() {
   async function assign(e: React.FormEvent) {
     e.preventDefault();
     const { data, error } = await supabase.rpc("assign_manager", { _email: email, _branch: branch });
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success(data === "assigned" ? "Access granted" : "Invited — they can now create an account with this email");
     setEmail("");
     refresh();
@@ -483,7 +483,7 @@ function AccountPanel({ email }: { email: string }) {
     const { error } = await supabase.auth.signInWithPassword({ email, password: pw });
     setBusy(false);
     setPw("");
-    if (error) return toast.error("Incorrect password");
+    if (error) { toast.error("Incorrect password"); return; }
     setStep(2);
   }
   async function change(e: React.FormEvent) {
@@ -491,7 +491,7 @@ function AccountPanel({ email }: { email: string }) {
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ email: newEmail }, { emailRedirectTo: window.location.origin + "/owner" });
     setBusy(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     setStep(3);
   }
   return (
